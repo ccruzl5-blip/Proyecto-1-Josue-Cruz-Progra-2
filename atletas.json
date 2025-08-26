@@ -1,0 +1,20 @@
+[
+  {
+    "nombre": "Roke con p",
+    "edad": 20,
+    "disciplina": "Levantamiento de pesas",
+    "departamento": "Izabal",
+    "entrenamientos": [
+      {
+        "fecha": "2024-08-22",
+        "tipo": "Peso muerto",
+        "valor": 300.0
+      },
+      {
+        "fecha": "2025-07-14",
+        "tipo": "Peso muerto",
+        "valor": 500.0
+      }
+    ]
+  }
+]

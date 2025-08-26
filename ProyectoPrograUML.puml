@@ -1,0 +1,118 @@
+@startuml
+
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+hide empty members
+
+title Diagrama de Clases - Sistema de Monitoreo de Atletas
+
+
+class Main {
+  + {static} main(String[] args)
+}
+
+class RegistroAtletas {
+  - atletas: List<Atleta>
+  - gson: Gson
+  + agregarAtleta(Atleta)
+  + buscarAtleta(String): Atleta
+  + guardarDatos(String)
+  + cargarDatos(String)
+}
+
+class Atleta {
+
+  - nombre: String
+  - edad: int
+  - disciplina: String
+  - entrenamientos: List<Entrenamiento>
+  + agregarEntrenamiento(Entrenamiento)
+}
+
+class Entrenamiento {
+  - fecha: LocalDate
+  - tipo: String
+  - valor: double
+}
+
+class RegistroEntrenamientos {
+  + registrarNuevaSesion(Atleta, ...)
+}
+
+class HistorialEntrenamientos {
+  + mostrarHistorial(Atleta)
+}
+
+class Estadisticas {
+  + mostrarEstadisticas(Atleta)
+}
+
+class LocalDateAdapter <<(G,LightGray)>> {
+  + serialize(...)
+  + deserialize(...)
+}
+
+
+
+Main .up.> RegistroAtletas : <<usa>>
+Main .up.> RegistroEntrenamientos : <<usa>>
+Main .up.> HistorialEntrenamientos : <<usa>>
+Main .up.> Estadisticas : <<usa>>
+
+
+RegistroAtletas "1" o-- "0..*" Atleta
+
+
+Atleta "1" *-- "0..*" Entrenamiento
+
+
+RegistroEntrenamientos ..> Atleta : <<depende de>>
+HistorialEntrenamientos ..> Atleta : <<depende de>>
+Estadisticas ..> Atleta : <<depende de>>
+
+
+RegistroAtletas .> LocalDateAdapter : <<usa>>
+
+
+note right of RegistroAtletas
+  Utiliza la librería **Gson** para
+  la serialización y deserialización
+  de los datos a formato JSON.
+end note
+
+note right of Atleta
+   Su unica responsabilidad es la de guardar datos y se aplica el principio de responsabilidad
+end note
+
+note right of Entrenamiento
+  Su única responsabilidad es contener datos.
+  Son clases de "modelo" y no saben cómo guardarse en un archivo ni cómo calcular estadísticas.
+  Solo existen para representar la información.
+  Usa principio de responsabilidad.
+end note
+
+note right of RegistroAtletas
+Su responsabilidad principal es gestionar la colección de atletas
+(agregar, buscar, cargar y guardar la lista completa).
+No se mete a registrar un entrenamiento individual ni a calcular promedios.
+Usa principio de responsabilidad.
+end note
+
+note right of RegistroEntrenamientos
+Su única tarea es añadir una nueva sesión de entrenamiento a un atleta específico.
+No sabe de otros atletas ni de estadísticas.
+Usa principio de responsabilidad.
+end note
+
+note right of HistorialEntrenamientos
+Su única función es mostrar los entrenamientos de un atleta.
+No los modifica ni los registra.
+Usa el principio de responsabilidad.
+end note
+
+note right of Estadisticas
+Su única responsabilidad es realizar cálculos (promedio, mejor marca, etc.)
+sobre los datos de un atleta.
+Usa el principio de responsabilidad
+end note
+@enduml
